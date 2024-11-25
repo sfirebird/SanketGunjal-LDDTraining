@@ -1,0 +1,1 @@
+savedcmd_/home/sanket/linuxTraining/Day2/driverDev/basicDriver/Module.symvers :=  scripts/mod/modpost -M -m -a      -o /home/sanket/linuxTraining/Day2/driverDev/basicDriver/Module.symvers -T /home/sanket/linuxTraining/Day2/driverDev/basicDriver/modules.order -i Module.symvers -e 
