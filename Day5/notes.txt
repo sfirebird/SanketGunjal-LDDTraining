@@ -1,0 +1,10 @@
+Q. What is copy_to_user()?
+-> So that we are not corrupting the kernel space.
+
+Process that happens from printf to display.
+
+systable mapping: https://github.com/torvalds/linux/blob/master/arch/x86/entry/syscalls/syscall_64.tbl
+copy_to_user.S: https://github.com/torvalds/linux/blob/master/arch/hexagon/mm/copy_to_user.S
+copy_from_user.S: https://github.com/torvalds/linux/blob/master/arch/arm64/lib/copy_from_user.S
+
+understand the mapping between the lib api and syscalls by understanding the syscalls and arch specific
