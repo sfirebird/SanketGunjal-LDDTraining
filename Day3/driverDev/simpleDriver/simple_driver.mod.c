@@ -35,6 +35,10 @@ MODULE_INFO(retpoline, "Y");
 
 static const char ____versions[]
 __used __section("__versions") =
+	"\x10\x00\x00\x00\xfd\xf9\x3f\x3c"
+	"sprintf\0"
+	"\x28\x00\x00\x00\xb3\x1c\xa2\x87"
+	"__ubsan_handle_out_of_bounds\0\0\0\0"
 	"\x10\x00\x00\x00\x94\xb6\x16\xa9"
 	"strnlen\0"
 	"\x18\x00\x00\x00\xe1\xbe\x10\x6b"
@@ -55,8 +59,8 @@ __used __section("__versions") =
 	"__check_object_size\0"
 	"\x18\x00\x00\x00\xc2\x9c\xc4\x13"
 	"_copy_from_user\0"
-	"\x28\x00\x00\x00\xb3\x1c\xa2\x87"
-	"__ubsan_handle_out_of_bounds\0\0\0\0"
+	"\x10\x00\x00\x00\x5a\x25\xd5\xe2"
+	"strcmp\0\0"
 	"\x18\x00\x00\x00\x3a\x0a\xd8\xfc"
 	"module_layout\0\0\0"
 	"\x00\x00\x00\x00\x00\x00\x00\x00";
@@ -64,4 +68,4 @@ __used __section("__versions") =
 MODULE_INFO(depends, "");
 
 
-MODULE_INFO(srcversion, "BA749BFCFF8D141F27F7470");
+MODULE_INFO(srcversion, "E079ABF7D89B71163FA14D1");

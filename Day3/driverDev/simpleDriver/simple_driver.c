@@ -24,6 +24,63 @@ static struct file_operations fops = {
     .write = device_write,
 };
 
+static void perform_operation(void){
+    char *buff = device_buffer;
+    int result; 
+    unsigned long value = 0;
+    int checkRet;
+    int mul = 1; 
+
+    while(buff != NULL){
+        if(*buff >= 48 && *buff <= 57){
+            value = (value * mul) + *buff - 48;
+            mul *= 10;
+            buff++;
+        }
+        else if((*buff >= 'A' && *buff <= 'Z') || (*buff >= 'a' && *buff <= 'z')){
+            break;
+        }
+        else{
+            buff++;
+        }
+    }
+
+    /*  increment until the value is exhausted from the string */
+    if(*buff != '\n'){
+        buff++;
+    }
+    
+    buff++;
+    
+    /* compare the string to check for specific operation */
+    if(strcmp(buff, "double")){
+        buff = device_buffer;
+        result = value * 2;
+        sprintf(buff, "%d", result);
+    }
+    else if(strcmp(buff, "square")){
+        buff = device_buffer;
+        result = value * value;
+        sprintf(buff, "%d", result);
+    }
+    else if(strcmp(buff, "add")){
+        buff = device_buffer;    
+    }
+    else if(strcmp(buff, "sub")){
+        
+    }
+    else if(strcmp(buff, "div")){
+        
+    }
+    else if(strcmp(buff, "mul")){
+    
+    }
+    else{
+    
+    }
+  
+}
+
 // Called when the device is opened
 static int device_open(struct inode *inode, struct file *file) {
     open_count++;
@@ -53,6 +110,7 @@ static ssize_t device_read(struct file *file, char __user *user_buffer, size_t s
 
     *offset += size;
     printk(KERN_INFO "simple_device: Sent %zu bytes to the user\n", size);
+
     return size;
 }
 
@@ -67,6 +125,8 @@ static ssize_t device_write(struct file *file, const char __user *user_buffer, s
 
     device_buffer[size] = '\0'; // Null-terminate the string
     printk(KERN_INFO "simple_device: Received %zu bytes from the user\n", size);
+    printk(KERN_INFO "Data read: %s", device_buffer);
+    perform_operation();
     return size;
 }
 
@@ -91,5 +151,6 @@ module_init(simple_driver_init);
 module_exit(simple_driver_exit);
 
 MODULE_LICENSE("GPL");
-MODULE_AUTHOR("Your Name");
+MODULE_AUTHOR("sanketgunjal@mirafra.com");
 MODULE_DESCRIPTION("A Simple Linux Device Driver");
+
