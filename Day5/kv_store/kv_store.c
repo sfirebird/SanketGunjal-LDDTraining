@@ -4,15 +4,7 @@
 #include <linux/uaccess.h>
 
 #define DEVICE_NAME         "kv_store"
-#define BUFFER_SIZE         1024
-
-#define HASH_CAP            10
-#define HASH_LL             -1
-#define HASH_HL             10
-
-static int major_number;
-static int dev_open;
-static char device_buffer[1024];
+#define VALUE_LENGTH        128
 
 /*  Create a structre which contains the key-value pairs    */
 struct __key_value_organized{
@@ -21,8 +13,26 @@ struct __key_value_organized{
 };
 
 typedef struct __key_value_organized __kvg;
+/*  __kvg storage limits    */
+#define HASH_CAP            10
+#define HASH_LL             -1
+#define HASH_HL             10
 
+/* Major number of the driver   */
+static int major_number;
+
+/* Keeps track of the number of times the device was opened */
+static int dev_open;
+
+/*  Buffer, soon to be deprecated  */
+//static char device_buffer[1024];
+
+#define BUFFER_SIZE         (sizeof(__kvg) + VALUE_LENGTH)
+//#define BUFFER_SIZE             sizeof(__kvg)
 static int TOP = -1;
+
+
+/*  Create a global pointer variable of type __kvg  */
 __kvg *hash = NULL;
 
 /*  Custom file operation function signatures to be mapped with fops */
@@ -32,8 +42,10 @@ static ssize_t device_read(struct file *file, char __user *user_buffer, size_t s
 static ssize_t device_write(struct file *file, const char __user *user_buffer, size_t size, loff_t *offset);
 
 /*  Custom implementation of given tasks    */
-static void get_kv(void);
+#ifdef PLUGGED
 static int attoi_user(const volatile char **pBuffer);
+#endif
+static int get_kvg_status(void);
 
 /*  Register custom file operation function */
 static struct file_operations fops = {     
@@ -57,7 +69,7 @@ static int device_close(struct inode *inode, struct file *file){
 static ssize_t device_read(struct file *file, char __user *user_buffer, size_t size, loff_t *offset){
     /*  get the length of the string    */
     //ssize_t len = strlen(device_buffer);
-    ssize_t len = sizeof(struct kvNode);
+    ssize_t len = sizeof(__kvg) + strlen(hash->__value);
 
 
     if(*offset >= len)
@@ -77,53 +89,34 @@ static ssize_t device_read(struct file *file, char __user *user_buffer, size_t s
 }
 
 static ssize_t device_write(struct file *file, const char __user *user_buffer, size_t size, loff_t *offset){
+    TOP++;
     if (size > BUFFER_SIZE - 1) // Limit size to buffer capacity
         size = BUFFER_SIZE - 1;
 
-    if (copy_from_user(device_buffer, user_buffer, size)) {
+
+    /* key-value is received in the format __kvg 
+       Check the top for available capacity in hash
+    */ 
+    if(TOP == HASH_HL){
+        printk(KERN_ERR "%s: Buffer full, delete data!", (char *)DEVICE_NAME);
+        return -EFAULT;
+    }    
+
+    if (copy_from_user(hash, user_buffer, size)) {
         return -EFAULT;
     }
 
-    device_buffer[size] = '\0'; // Null-terminate the string
     printk(KERN_INFO "%s: Received %zu bytes from the user\n", (char *)DEVICE_NAME, size);
-    get_kv();
+
+    /* print to the dmesg for debugging purpose */
+    printk(KERN_INFO "%s: key-value=%llu:%s", (char *)DEVICE_NAME, hash[TOP].__key, hash[TOP].__value);
+
+
     return size;
 }
 
-/* Responsible for extracting the key:value from the buffer */
-static void get_kv(void){
-    char *buff = device_buffer;
-
-    /* key-value is received in the format = "key:value" */
-    /* Extract the key */
-    int kv = attoi_user((const volatile char **)&buff);
-    if(kv == -1)
-        printk(KERN_ERR "%s: NULL buffer", (char *)DEVICE_NAME);
-    
-    /* store the key in buffer */
-    TOP++;
-    if(TOP == HASH_HL){
-        printk(KERN_ERR "%s: Buffer full, delete data!", (char *)DEVICE_NAME);
-    }
-    hash[TOP].key = kv;
-
-    /* extract the value */
-    buff++;
-    kv = attoi_user((const volatile char **)&buff);
-    if(kv == -1)
-        printk(KERN_ERR "%s: NULL buffer", (char *)DEVICE_NAME);
-
-    printk(KERN_INFO "kv = %d", kv);
-
-    /* store the value for the key in buffer */
-    if(TOP == HASH_HL){
-        printk(KERN_ERR "%s: Buffer full, delete data!", (char *)DEVICE_NAME);
-    }
-    hash[TOP].value = kv;
-
-    /* print to the dmesg for debugging purpose */
-    printk(KERN_INFO "%s: key-value:%d:%d", (char *)DEVICE_NAME, hash[TOP].key, hash[TOP].value);
-
+static int get_kvg_status(void){
+    copy_to_user(user)
 }
 
 #ifdef PLUGGED
@@ -166,7 +159,7 @@ static int __init kv_store_init(void){
     /*  Allocate dynamic memory for the char *value member  */
     int loop_start;
     for(loop_start = 0; loop_start < HASH_CAP; loop_start++){
-        hash[loop_start]->__value = (char *)kzalloc(sizeof(char) * VALUE_LENGTH);
+        hash[loop_start].__value = (char *)kzalloc(sizeof(char) * VALUE_LENGTH, GFP_KERNEL);
         //hash->__value = (char *)kzalloc(sizeof(char) * VALUE_LENGTH);
     }
 
@@ -184,7 +177,7 @@ static void __exit kv_store_exit(void){
         /*  Free the memory for the __value member  */
         int loop_start;
         for(loop_start = 0; loop_start < HASH_CAP; loop_start++){
-            kfree(hash[loop_start]->__value);
+            kfree(hash[loop_start].__value);
         }
     }
     

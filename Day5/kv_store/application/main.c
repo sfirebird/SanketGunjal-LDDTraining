@@ -5,6 +5,7 @@
 #include <fcntl.h>
 
 //#define FILE_IO
+#define PRINT_DEBUG
 
 struct key_value_organized{
     unsigned long long int key;
@@ -23,17 +24,25 @@ int main(int argc, char **argv){
 
     /*  Assign dynamic memory the __value member    */
     kvg pair1 = {
-        .value = (char *)malloc(sizeof(char) * 1024),
+        .value = (char *)malloc(sizeof(char) * 124),
     };
 
     /*  Get the key value pair from the user and register it into kernel    */
     printf("Enter the key: ");
     scanf("%llu", &pair1.key);
 
-    printf("Enter the value for the key: \n");
+    printf("Enter the value for the key: ");
     scanf("%s", pair1.value);
 
-    int len = sizeof(pair1.key) + strlen(pair1.value);
+#ifdef PRINT_DEBUG
+    printf("Credentials:\n%llu:%s\n", pair1.key, pair1.value);
+#endif
+
+    int len = sizeof(kvg) + strlen(pair1.value);
+#ifdef PRINT_DEBUG
+    printf("lenght of pair1 = %d\n", len);
+#endif
+    //int len = sizeof(pair1.key);
 
 #ifdef FILE_IO
     FILE *fp = NULL;    
@@ -46,10 +55,10 @@ int main(int argc, char **argv){
     int fd = open(argv[1], O_RDONLY | O_WRONLY);
 
     /* write to the char special file mounted at argv[1]*/
-    write(fd, (kvg *)&pair1, len);
+    write(fd, &pair1, len);
 
     /* read from argv[1] into buff */
-    read(fd, (kvg *)&pair1, sizeof(kvg));
+    read(fd, &pair1, sizeof(kvg));
 
     close(fd);
 #endif
