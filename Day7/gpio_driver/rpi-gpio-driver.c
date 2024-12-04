@@ -8,7 +8,7 @@
 #define GPIO_PIN 17  // Pin number on Raspberry Pi GPIO
 
 MODULE_LICENSE("GPL");
-MODULE_AUTHOR("Your Name");
+MODULE_AUTHOR("Sanket");
 MODULE_DESCRIPTION("A Simple GPIO Driver for Raspberry Pi");
 MODULE_VERSION("1.0");
 
@@ -85,7 +85,7 @@ static int __init gpio_driver_init(void) {
     }
 
     // Register device
-    ret = register_chrdev(240, "gpio_driver", &gpio_fops);
+    ret = register_chrdev(0, "gpio_driver", &gpio_fops);
     if (ret < 0) {
         pr_err("Failed to register character device\n");
         gpio_free(GPIO_PIN);
