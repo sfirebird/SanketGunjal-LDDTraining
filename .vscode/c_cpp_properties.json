@@ -1,0 +1,24 @@
+{
+    "configurations": [
+        {
+            "name": "Linux",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "/usr/src/linux-headers-6.8.0-49/include/**",
+                "/usr/src/linux-headers-6.8.0-49/include/uapi/**",
+                "/usr/src/linux-headers-6.8.0-49/include/asm-generic/**",
+                "/usr/src/linux-headers-6.8.0-49/arch/x86/include/**",
+                "/lib/modules/6.8.0-49-generic/build/include/"
+            ],
+            "defines": [
+                "__KERNEL__",
+                "MODULE"
+            ],
+            "compilerPath": "/usr/bin/gcc",
+            "cStandard": "c17",
+            "cppStandard": "gnu++17",
+            "intelliSenseMode": "linux-gcc-x64"
+        }
+    ],
+    "version": 4
+}
