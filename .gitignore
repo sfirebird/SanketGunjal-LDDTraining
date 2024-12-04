@@ -1,0 +1,9 @@
+/linux
+*.mod
+*.mod.c
+*.mod.o
+*.symvers
+*.order
+*.cmd
+Module.symvers
+modules.order
