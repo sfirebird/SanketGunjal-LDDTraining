@@ -2,3 +2,7 @@
 
 #### Q. What is the behaviour of the name of the device driver? For example, the name of the .c device driver file is kv_store.c after you compile this you will get a file called, kv_store.ko which is a kernel object file and when you insert it using the insmod command, you are inserting the .ko file but later on if you change the name? what happens then?
 - It is possible to assign a different name to the special character file but the device driver kv_store name would remain same just the file name would be different.
+
+#### Q. What is the device_number? What is the difference between major, minor and device number?
+
+#### Q. [  146.561530] pir_driver: loading out-of-tree module taints kernel. what is the meaning of this?
