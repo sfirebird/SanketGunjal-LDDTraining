@@ -1,1 +1,0 @@
-savedcmd_/home/sanket/linuxTraining/LDDTraining/Day3/driverDev/simpleDriver/modules.order := {   echo /home/sanket/linuxTraining/LDDTraining/Day3/driverDev/simpleDriver/simple_driver.o; :; } > /home/sanket/linuxTraining/LDDTraining/Day3/driverDev/simpleDriver/modules.order

@@ -1,1 +1,0 @@
-savedcmd_/home/sanket/linuxTraining/LDDTraining/Day9/uartDriver/modules.order := {   echo /home/sanket/linuxTraining/LDDTraining/Day9/uartDriver/uartDriver.c; :; } > /home/sanket/linuxTraining/LDDTraining/Day9/uartDriver/modules.order

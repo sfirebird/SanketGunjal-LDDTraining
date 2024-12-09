@@ -1,1 +1,0 @@
-savedcmd_/home/sanket/linuxTraining/Day2/driverDev/basicDriver/basicDriver.mod := printf '%s\n'   basicDriver.o | awk '!x[$$0]++ { print("/home/sanket/linuxTraining/Day2/driverDev/basicDriver/"$$0) }' > /home/sanket/linuxTraining/Day2/driverDev/basicDriver/basicDriver.mod
