@@ -15,7 +15,7 @@
 #define UART0_REG_SIZE  0x48  // Size of UART registers
 
 //static dev_t dev_num;
-//static struct cdev uart_cdev;
+static struct cdev uart_cdev;
 static struct class *uart_class;
 static void __iomem *uart_base;
 static struct file_operations fops;
@@ -49,6 +49,7 @@ static struct file_operations fops = {
 };
 
 static int __init uart_driver_init(void) {
+    int xRet = 0; 
 
     // Map UART0 registers into kernel space
     uart_base = ioremap(UART0_BASE_ADDR, UART0_REG_SIZE);
@@ -58,13 +59,21 @@ static int __init uart_driver_init(void) {
     }
 
     // Allocate a major number dynamically
+    if((xRet = alloc_chrdev_region(&uart_cdev, 0, 1, DEVICE_NAME))){
+        printk(KERN_ALERT "UART Driver: Failed to register a major number\n");
+        iounmap(uart_base);
+    }
+    
+    /*
+    // Allocate a major number dynamically
     major_number = register_chrdev(0, DEVICE_NAME, &fops);
     if (major_number < 0) {
         printk(KERN_ALERT "UART Driver: Failed to register a major number\n");
         iounmap(uart_base);
         return major_number;
     }
-    printk(KERN_INFO "UART Driver: Registered with major number %d\n", major_number);
+    */
+    printk(KERN_INFO "UART Driver: Registered with major number %d\n", MAJOR(uart_cdev));
 
     // Create a device class
     uart_class = class_create(CLASS_NAME);
