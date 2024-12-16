@@ -47,7 +47,7 @@ static int __init gpio_led_init(void){
     }
 
     /*  Used in conjunction with <linux/of.h> header file to get the gpio information from the DT   */
-    gpio_led = of_get_named_gpio(node, "led_gpio", 0);
+    gpio_led = of_get_named_gpio(node, "gpios", 0);
     if (gpio_led < 0) {
         pr_err("Failed to get GPIO from Device Tree\n");
         return gpio_led;
