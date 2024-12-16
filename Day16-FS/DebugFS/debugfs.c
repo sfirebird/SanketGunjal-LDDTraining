@@ -11,9 +11,10 @@ static int debugfs_value = 0; // Value exposed via debugfs
 
 /* Read function */
 static ssize_t debugfs_read(struct file *fp, char __user *user_buffer, size_t count, loff_t *position) {
-    char buffer[64];
+    char buffer[64] = "0";
     int len = snprintf(buffer, sizeof(buffer), "%d\n", debugfs_value);
 
+    /*  What is the use of this API? Instead you can also call the copy_to_user()   */
     return simple_read_from_buffer(user_buffer, count, position, buffer, len);
 }
 
