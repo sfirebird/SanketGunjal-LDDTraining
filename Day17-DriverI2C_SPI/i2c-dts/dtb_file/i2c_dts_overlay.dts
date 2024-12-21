@@ -1,0 +1,20 @@
+/dts-v1/;
+/plugin/;
+
+/{
+    compatible="brcm,bcm2711";
+
+    fragment{
+        target = <&i2c1>;       // The bus used in i2c1
+        _overlay_{
+            #address-cells = <1>;
+            #size-cells = <0>;
+            status = "okay";    // This will enable the i2c1 bus which is disabled by default
+            clock-frequency = <400000>;
+            STM32@3c{
+                compatible = "STM32F4,STM32";
+                reg = <0x3c>;   // STM32 as a slave address
+            };
+        };
+    };
+};
